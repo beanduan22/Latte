@@ -1,15 +1,14 @@
 
 
-```markdown
 # Argus
 
-## Overview
+### Overview
 This project includes multiple deep learning models for training and testing on various datasets. You can switch models by modifying the model name in `main.py`. The project supports MNIST, CIFAR10, and ImageNet datasets, with logs automatically saved during runtime.
 
 ## Setup Instructions
 
 ### 1. Clone the Repository
-First, download the project code by cloning this repository. This will create a local copy of the project files on your machine:
+First, download the project code:
 ```bash
 git clone <repository_url>
 cd <project_name>
