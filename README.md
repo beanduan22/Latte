@@ -50,4 +50,3 @@ Logs generated during runtime will be saved in the `output/log` folder.
 **Note**: Replace `<repository_url>` with the actual URL of the GitHub repository and `<project_name>` with the name of your project.
 ```
 
-将 `<repository_url>` 和 `<project_name>` 替换为项目的实际 GitHub URL 和项目名称。这段代码可直接粘贴到 GitHub 的 `README.md` 文件中。
