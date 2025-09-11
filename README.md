@@ -26,12 +26,12 @@
 
 * train baseline DNN classifiers,
 * train **VQ-VAE** generators used for latent-space test case synthesis,
-* evaluate models under **single-model oracles** and **multi-model (differential) oracles**, and
+* evaluate models under **single-model oracles** and **multi-model oracles**, and
 * log results, checkpoints, and visualizations automatically.
 
 **Supported settings**
 
-* **Single-model**: MNIST, CIFAR-10, ImageNet
+* **Single-model**: MNIST (LeNet-4, LeNet-5), CIFAR-10 (VGG16, ResNet18), ImageNet(VGG19, ResNet50)
 * **Multi-model**: MNIST (LeNet-4 vs LeNet-5), FashionMNIST (Custom-1.6B vs Custom-3.3B), SVHN (All-CNN-A vs All-CNN-B)
 
 
@@ -83,7 +83,7 @@ All datasets are auto-downloaded to `./data` when first used:
 
 Supported datasets: **MNIST**, **CIFAR-10**, **ImageNet**.
 
-In `main.py`, choose a model name (e.g., `cifar10_resnet8_encoder_decoder`, `imagenet_resnet50_encoder_decoder`, etc.) and run:
+In `main.py`, choose a model name (e.g., `cifar10_resnet18_encoder_decoder`, `imagenet_resnet50_encoder_decoder`, etc.) and run:
 
 ```bash
 python main_single_model.py
@@ -102,7 +102,7 @@ This will:
 
 Supported pairs:
 
-| Dataset          | Model A     | Model B     | VQ-VAE (shared)             |
+| Dataset          | Model A     | Model B     | VQ-VAE             |
 | ---------------- | ----------- | ----------- | --------------------------- |
 | **MNIST**        | LeNet-4     | LeNet-5     | `Lenet5_VQVAE_mnist`        |
 | **FashionMNIST** | Custom-1.6B | Custom-3.3B | `CUSTOM_VQVAE_fashionmnist` |
