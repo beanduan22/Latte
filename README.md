@@ -16,7 +16,6 @@
 * [Run: Single-Model](#run-single-model)
 * [Run: Multi-Model (Differential)](#run-multi-model-differential)
 * [Configuration](#configuration)
-* [Expected Outputs](#expected-outputs)
 
 ---
 
@@ -154,16 +153,3 @@ model_a, model_b, vqvae, save_path = build_models_for(DATASET, num_classes)
 Feel free to swap in your own backbones or adjust capacities (e.g., width multipliers in `Custom_Model_*`).
 
 ---
-
-## Expected Outputs
-
-* **Logs**: `output/log/…` and per-experiment subdirs under `output/<tag>/…`
-* **Classifier checkpoints**: `output/<tag>/modelA/dnn_model.pth`, `output/<tag>/modelB/dnn_model.pth`
-* **VQ-VAE checkpoint**: `output/<tag>/vqvae/vqvae_model.pth`
-* **Metrics**:
-
-  * Single-model: NoF, DoF, FID, FSR, GE
-  * Multi-model: NoF, FC, CS, FID, GE
-
----
-
