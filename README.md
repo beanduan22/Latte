@@ -171,9 +171,8 @@ Feel free to swap in your own backbones or adjust capacities (e.g., width multip
 * **VQ-VAE checkpoint**: `output/<tag>/vqvae/vqvae_model.pth`
 * **Metrics**:
 
-  * Single-model: standard accuracy/loss over train/val; recon/VQ losses for VQ-VAE
-  * Multi-model: **disagreement rate** (A vs B) on the validation set
-* **(Optional)** figures comparing latent spaces or reconstructions if enabled by evaluators
+  * Single-model: NoF, DoF, FID, FSR, GE
+  * Multi-model: NoF, FC, CS, FID, GE
 
 ---
 
