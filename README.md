@@ -1,8 +1,6 @@
 # LATTE
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.7%2B-blue.svg)](#requirements)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.13%2B-orange.svg)](#requirements)
 
 > Latent-space, anchor-guided test generation and evaluation for image classifiers.
 > **Single-model** and **Multi-model** testing on MNIST, CIFAR-10, ImageNet, FashionMNIST, and SVHN.
