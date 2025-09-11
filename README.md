@@ -62,11 +62,8 @@ cd <project_name>
 mkdir -p data output/log
 ```
 
-3. **Run (defaults in `main.py`)**
+3. **Run**
 
-```bash
-python main.py
-```
 
 Logs/checkpoints go to `output/…` (paths are auto-created).
 
@@ -89,7 +86,7 @@ Supported datasets: **MNIST**, **CIFAR-10**, **ImageNet**.
 In `main.py`, choose a model name (e.g., `cifar10_resnet8_encoder_decoder`, `imagenet_resnet50_encoder_decoder`, etc.) and run:
 
 ```bash
-python main.py
+python main_single_model.py
 ```
 
 This will:
@@ -101,7 +98,7 @@ This will:
 
 ---
 
-## Run: Multi-Model (Differential)
+## Run: Multi-Model
 
 Supported pairs:
 
@@ -120,14 +117,8 @@ DATASET = "mnist"          # or "fashionmnist" / "svhn"
 Then run:
 
 ```bash
-python main.py
+python main_multi_model.py
 ```
-
-What happens:
-
-* trains **Model A** and **Model B** for the chosen dataset,
-* trains the dataset-appropriate **VQ-VAE**,
-* runs a **differential test** reporting the *disagreement rate* (where the two models predict different labels).
 
 ---
 
