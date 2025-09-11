@@ -351,6 +351,104 @@ class Vgg19_VQVAE_imagenet(nn.Module):
 
         return x_recon, z_e, loss, perplexity, indices
 
+class ALLCNN_VQVAE_fashionmnist(nn.Module):
+    def __init__(
+        self,
+        in_channel: int = 1,          # FashionMNIST is grayscale
+        hid_channel: int = 96,
+        n_res_block: int = 2,
+        n_res_channel: int = 32,
+        embed_dim: int = 8,
+        n_embed: int = 96,
+        num_downsamples: int = 2,
+        beta: float = 0.25
+    ):
+        super().__init__()
+        self.encoder = Encoder(
+            in_channel,
+            hid_channel,
+            n_res_block,
+            n_res_channel,
+            num_downsamples
+        )
+        self.enc_to_quant = nn.Conv2d(hid_channel, embed_dim, 1)
+        self.quantize = VectorQuantizer(
+            n_embed=n_embed,
+            embed_dim=embed_dim,
+            beta=beta
+        )
+        self.quant_to_dec = nn.Conv2d(embed_dim, hid_channel, 1)
+        self.decoder = Decoder(
+            hid_channel,
+            in_channel,
+            n_res_block,
+            n_res_channel,
+            num_downsamples
+        )
+
+    def forward(self, input: Tensor) -> Tuple[Tensor, Tensor, Tensor, float, Tensor]:
+        # Encoder
+        z_e = self.encoder(input)
+        z_e_proj = self.enc_to_quant(z_e)
+
+        # Vector Quantization
+        z_q, loss, perplexity, indices = self.quantize(z_e_proj)
+
+        # Decoder
+        z_q_up = self.quant_to_dec(z_q)
+        x_recon = self.decoder(z_q_up)
+
+        return x_recon, z_e, loss, perplexity, indices
+
+
+class CUSTOM_VQVAE_svhn(nn.Module):
+    def __init__(
+        self,
+        in_channel: int = 3,          # SVHN is RGB
+        hid_channel: int = 128,
+        n_res_block: int = 12,
+        n_res_channel: int = 64,
+        embed_dim: int = 16,
+        n_embed: int = 256,
+        num_downsamples: int = 3,
+        beta: float = 0.25
+    ):
+        super().__init__()
+        self.encoder = Encoder(
+            in_channel,
+            hid_channel,
+            n_res_block,
+            n_res_channel,
+            num_downsamples
+        )
+        self.enc_to_quant = nn.Conv2d(hid_channel, embed_dim, 1)
+        self.quantize = VectorQuantizer(
+            n_embed=n_embed,
+            embed_dim=embed_dim,
+            beta=beta
+        )
+        self.quant_to_dec = nn.Conv2d(embed_dim, hid_channel, 1)
+        self.decoder = Decoder(
+            hid_channel,
+            in_channel,
+            n_res_block,
+            n_res_channel,
+            num_downsamples
+        )
+
+    def forward(self, input: Tensor) -> Tuple[Tensor, Tensor, Tensor, float, Tensor]:
+        # Encoder
+        z_e = self.encoder(input)
+        z_e_proj = self.enc_to_quant(z_e)
+
+        # Vector Quantization
+        z_q, loss, perplexity, indices = self.quantize(z_e_proj)
+
+        # Decoder
+        z_q_up = self.quant_to_dec(z_q)
+        x_recon = self.decoder(z_q_up)
+
+        return x_recon, z_e, loss, perplexity, indices
 
 class Resnet50_VQVAE_imagenet(nn.Module):
     def __init__(
@@ -502,5 +600,6 @@ class Lenet4_VQVAE_mnist(nn.Module):
         # Decoder
         #z_q = self.quant_to_dec(z_q)  # (B, hid_channel, H', W')
         x_recon = self.decoder(z_q)  # (B, in_channel, H, W)
+
 
         return x_recon, z_e, loss, perplexity, indices
