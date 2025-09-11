@@ -1,9 +1,9 @@
 
 
-# Argus
+# LATTE
 
 ### Overview
-This project includes multiple deep learning models for training and testing on various datasets. You can switch models by modifying the model name in `main.py`. The project supports MNIST, CIFAR10, and ImageNet datasets, with logs automatically saved during runtime.
+This project includes multiple deep learning models for training and testing on various datasets. You can switch models by modifying the model name in `main.py`. The project supports MNIST, CIFAR10, and ImageNet datasets for single-model testing; MNIST, FashionMNIST, and SVHN datasets for multi-model testing, with logs automatically saved during runtime.
 
 ## Setup Instructions
 
