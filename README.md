@@ -83,7 +83,7 @@ All datasets are auto-downloaded to `./data` when first used:
 
 Supported datasets: **MNIST**, **CIFAR-10**, **ImageNet**.
 
-In `main.py`, choose a model name (e.g., `cifar10_resnet18_encoder_decoder`, `imagenet_resnet50_encoder_decoder`, etc.) and run:
+In `main_single_model.py`, choose a model name (e.g., `cifar10_resnet18_encoder_decoder`, `imagenet_resnet50_encoder_decoder`, etc.) and run:
 
 ```bash
 python main_single_model.py
@@ -108,7 +108,7 @@ Supported pairs:
 | **FashionMNIST** | Custom-1.6B | Custom-3.3B | `CUSTOM_VQVAE_fashionmnist` |
 | **SVHN**         | All-CNN-A   | All-CNN-B   | `ALLCNN_VQVAE_svhn`       |
 
-In `main.py`, set:
+In `main_multi_model.py`, set:
 
 ```python
 DATASET = "mnist"          # or "fashionmnist" / "svhn"
@@ -124,7 +124,7 @@ python main_multi_model.py
 
 ## Configuration
 
-Key knobs in `main.py`:
+Key knobs in `main_single_model.py` or `main_multi_model.py`:
 
 ```python
 # Dataset selector for multi-model
