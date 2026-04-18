@@ -26,9 +26,9 @@ Download from https://image-net.org/ after registering and arrange `val/` into c
 
 ## Run
 
-Every experiment needs a trained VQ-VAE, at least one trained classifier, then a LATTE run.
+Each experiment: train the VQ-VAE once, train the classifier(s), run LATTE, evaluate.
 
-### MNIST single-model (LeNet-5)
+### MNIST single-model
 
 ```bash
 python train_vqvae.py --config configs/mnist_vqvae.yaml
@@ -38,7 +38,7 @@ python evaluate_results.py --config configs/mnist_lenet5_single.yaml \
   --failures results/mnist_lenet5_single/failures_single.pt
 ```
 
-Swap `lenet5` for `lenet4` with `configs/mnist_lenet4_single.yaml`.
+Replace `lenet5` with `lenet4` via `configs/mnist_lenet4_single.yaml`.
 
 ### CIFAR-10 single-model
 
@@ -50,7 +50,7 @@ python evaluate_results.py --config configs/cifar10_vgg16_single.yaml \
   --failures results/cifar10_vgg16_single/failures_single.pt
 ```
 
-Swap `vgg16` for `resnet18` with `configs/cifar10_resnet18_single.yaml`.
+Replace `vgg16` with `resnet18` via `configs/cifar10_resnet18_single.yaml`.
 
 ### ImageNet single-model
 
@@ -62,9 +62,9 @@ python evaluate_results.py --config configs/imagenet_vgg19_single.yaml \
   --failures results/imagenet_vgg19_single/failures_single.pt
 ```
 
-Swap `vgg19` for `resnet50` with `configs/imagenet_resnet50_single.yaml`.
+Replace `vgg19` with `resnet50` via `configs/imagenet_resnet50_single.yaml`.
 
-### Multi-model (differential) testing
+### Multi-model
 
 ```bash
 python train_vqvae.py --config configs/mnist_vqvae.yaml
@@ -75,14 +75,4 @@ python evaluate_results.py --config configs/mnist_multi.yaml \
   --failures results/mnist_multi/failures_multi.pt
 ```
 
-Replace `mnist` with `fashionmnist` or `svhn` using the matching config. The model pairs are:
-
-| Dataset       | Model A     | Model B     |
-|---------------|-------------|-------------|
-| mnist         | LeNet-4     | LeNet-5     |
-| fashionmnist  | Custom-1.6B | Custom-3.3B |
-| svhn          | All-CNN-A   | All-CNN-B   |
-
-## Semantic drift (DINOv2)
-
-`evaluate_results.py` computes semantic drift via DINOv2 on a sample of failures. It downloads weights via `torch.hub`; no extra install is required beyond the default `pip install -e .`.
+Replace `mnist` with `fashionmnist` (use `configs/fashionmnist_multi.yaml` and `configs/fashionmnist_vqvae.yaml`) or `svhn` (use `configs/svhn_multi.yaml` and `configs/svhn_vqvae.yaml`).
