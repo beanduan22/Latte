@@ -1,0 +1,33 @@
+seed: 123
+output_dir: results/imagenet_resnet50_single
+dataset:
+  name: imagenet
+  root: ./imagenet
+  normalization: imagenet
+  image_size: 224
+model_a:
+  name: resnet50
+  pretrained: true
+classifier_ckpt:
+  a: results/imagenet_resnet50_single/classifier_a.pt
+vqvae_ckpt: results/imagenet_vqvae/vqvae.pt
+train:
+  batch_size: 64
+  lr: 0.0001
+  epochs: 1
+  num_workers: 8
+vqvae:
+  batch_size: 64
+  lr: 0.0002
+  epochs: 5
+  num_workers: 8
+  recon_weight: 2.0
+latte:
+  oracle: single
+  num_seeds: 100
+  per_class_cap: null
+  pairs_per_seed: 10000
+  exploration_degree: 5
+  num_steps: 20
+  anchor_pool_limit: 20000
+  store_samples: false

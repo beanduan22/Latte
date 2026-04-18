@@ -1,0 +1,32 @@
+seed: 123
+output_dir: results/cifar10_resnet18_single
+dataset:
+  name: cifar10
+  root: ./data
+  normalization: half
+model_a:
+  name: resnet18
+  pretrained: true
+classifier_ckpt:
+  a: results/cifar10_resnet18_single/classifier_a.pt
+vqvae_ckpt: results/cifar10_vqvae/vqvae.pt
+train:
+  batch_size: 128
+  lr: 0.0001
+  epochs: 20
+  num_workers: 4
+vqvae:
+  batch_size: 128
+  lr: 0.0002
+  epochs: 40
+  num_workers: 4
+  recon_weight: 2.0
+latte:
+  oracle: single
+  num_seeds: 100
+  per_class_cap: 10
+  pairs_per_seed: 10000
+  exploration_degree: 5
+  num_steps: 20
+  anchor_pool_limit: 10000
+  store_samples: false

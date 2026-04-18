@@ -1,0 +1,35 @@
+seed: 123
+output_dir: results/mnist_multi
+dataset:
+  name: mnist
+  root: ./data
+  normalization: half
+model_a:
+  name: lenet4
+  pretrained: false
+model_b:
+  name: lenet5
+  pretrained: false
+classifier_ckpt:
+  a: results/mnist_multi/classifier_a.pt
+  b: results/mnist_multi/classifier_b.pt
+vqvae_ckpt: results/mnist_vqvae/vqvae.pt
+train:
+  batch_size: 128
+  lr: 0.001
+  epochs: 20
+  num_workers: 4
+vqvae:
+  batch_size: 128
+  lr: 0.001
+  epochs: 30
+  num_workers: 4
+  recon_weight: 2.0
+latte:
+  oracle: multi
+  num_seeds: 100
+  pairs_per_seed: 100
+  exploration_degree: 5
+  num_steps: 20
+  anchor_pool_limit: 10000
+  store_samples: false

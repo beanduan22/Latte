@@ -1,0 +1,13 @@
+seed: 123
+output_dir: results/imagenet_vqvae
+dataset:
+  name: imagenet
+  root: ./imagenet
+  normalization: imagenet
+  image_size: 224
+vqvae:
+  batch_size: 32
+  lr: 0.0002
+  epochs: 5
+  num_workers: 8
+  recon_weight: 2.0

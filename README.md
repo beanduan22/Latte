@@ -1,156 +1,88 @@
 # LATTE
 
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-> Latent-space, anchor-guided test generation and evaluation for image classifiers.
-> **Single-model** and **Multi-model** testing on MNIST, CIFAR-10, ImageNet, FashionMNIST, and SVHN.
-
----
-
-
-## Table of Contents
-
-* [Overview](#overview)
-* [Requirements](#requirements)
-* [Quickstart](#quickstart)
-* [Datasets](#datasets)
-* [Run: Single-Model](#run-single-model)
-* [Run: Multi-Model (Differential)](#run-multi-model-differential)
-* [Configuration](#configuration)
-
----
-
-## Overview
-
-**LATTE** provides a clean, modular pipeline to:
-
-* train baseline DNN classifiers,
-* train **VQ-VAE** generators used for latent-space test case synthesis,
-* evaluate models under **single-model oracles** and **multi-model oracles**, and
-* log results, checkpoints, and visualizations automatically.
-
-**Supported settings**
-
-* **Single-model**: MNIST (LeNet-4, LeNet-5), CIFAR-10 (VGG16, ResNet18), ImageNet(VGG19, ResNet50)
-* **Multi-model**: MNIST (LeNet-4 vs LeNet-5), FashionMNIST (Custom-1.6B vs Custom-3.3B), SVHN (All-CNN-A vs All-CNN-B)
-
-
----
-
-## Requirements
-
-Install all dependencies:
+## Install
 
 ```bash
+conda create -n latte python=3.10 -y
+conda activate latte
 pip install -r requirements.txt
+pip install torchvision
+pip install -e .
 ```
-
----
-
-## Quickstart
-
-1. **Clone**
-
-```bash
-git clone <repository_url>
-cd <project_name>
-```
-
-2. **Prepare folders**
-
-```bash
-mkdir -p data output/log
-```
-
-3. **Run**
-
-
-Logs/checkpoints go to `output/…` (paths are auto-created).
-
----
 
 ## Datasets
 
-All datasets are auto-downloaded to `./data` when first used:
+MNIST, FashionMNIST, SVHN, CIFAR-10 download automatically to `./data` on first use.
 
-* **MNIST** (28×28 gray), **FashionMNIST** (28×28 gray)
-* **CIFAR-10** (32×32 RGB), **SVHN** (32×32 RGB)
-* **ImageNet** (supply your own path or loader; see comments in `prepare_data_*` and `Model.py`)
+ImageNet must be provided manually in `./imagenet/`:
 
----
+```
+imagenet/
+  train/<class>/*.JPEG
+  val/<class>/*.JPEG
+```
 
-## Run: Single-Model
+Download from https://image-net.org/ after registering and arrange `val/` into class folders with the official devkit.
 
-Supported datasets: **MNIST**, **CIFAR-10**, **ImageNet**.
+## Run
 
-In `main_single_model.py`, choose a model name (e.g., `cifar10_resnet18_encoder_decoder`, `imagenet_resnet50_encoder_decoder`, etc.) and run:
+Every experiment needs a trained VQ-VAE, at least one trained classifier, then a LATTE run.
+
+### MNIST single-model (LeNet-5)
 
 ```bash
-python main_single_model.py
+python train_vqvae.py --config configs/mnist_vqvae.yaml
+python train_classifier.py --config configs/mnist_lenet5_single.yaml --target a
+python run_latte.py --config configs/mnist_lenet5_single.yaml
+python evaluate_results.py --config configs/mnist_lenet5_single.yaml \
+  --failures results/mnist_lenet5_single/failures_single.pt
 ```
 
-This will:
+Swap `lenet5` for `lenet4` with `configs/mnist_lenet4_single.yaml`.
 
-* train the selected **classifier**,
-* train the paired **VQ-VAE** generator,
-* evaluate with single-model oracles,
-* save logs & checkpoints under `output/<model_tag>/…`.
-
----
-
-## Run: Multi-Model
-
-Supported pairs:
-
-| Dataset          | Model A     | Model B     | VQ-VAE             |
-| ---------------- | ----------- | ----------- | --------------------------- |
-| **MNIST**        | LeNet-4     | LeNet-5     | `Lenet5_VQVAE_mnist`        |
-| **FashionMNIST** | Custom-1.6B | Custom-3.3B | `CUSTOM_VQVAE_fashionmnist` |
-| **SVHN**         | All-CNN-A   | All-CNN-B   | `ALLCNN_VQVAE_svhn`       |
-
-In `main_multi_model.py`, set:
-
-```python
-DATASET = "mnist"          # or "fashionmnist" / "svhn"
-```
-
-Then run:
+### CIFAR-10 single-model
 
 ```bash
-python main_multi_model.py
+python train_vqvae.py --config configs/cifar10_vqvae.yaml
+python train_classifier.py --config configs/cifar10_vgg16_single.yaml --target a
+python run_latte.py --config configs/cifar10_vgg16_single.yaml
+python evaluate_results.py --config configs/cifar10_vgg16_single.yaml \
+  --failures results/cifar10_vgg16_single/failures_single.pt
 ```
 
----
+Swap `vgg16` for `resnet18` with `configs/cifar10_resnet18_single.yaml`.
 
-## Configuration
+### ImageNet single-model
 
-Key knobs in `main_single_model.py` or `main_multi_model.py`:
-
-```python
-# Dataset selector for multi-model
-DATASET = "mnist"  # "mnist" | "fashionmnist" | "svhn"
-
-# Batching / epochs
-train_batch_size = 64
-test_batch_size  = 256
-pre_train_epoch = 10
-vqvae_train_epoch = 30
-
-# Optim / loss weights
-learning_rate = 1e-3
-dec_loss_weight_ = 2.0   # recon loss weight (VQ-VAE)
-vq_loss_weight_  = 1.0   # VQ loss weight (VQ-VAE)
-
-# Optional adversarial/generator phase
-USE_ADVERSARIAL_PHASE = False
+```bash
+python train_vqvae.py --config configs/imagenet_vqvae.yaml
+python train_classifier.py --config configs/imagenet_vgg19_single.yaml --target a
+python run_latte.py --config configs/imagenet_vgg19_single.yaml
+python evaluate_results.py --config configs/imagenet_vgg19_single.yaml \
+  --failures results/imagenet_vgg19_single/failures_single.pt
 ```
 
-Model wiring for each dataset lives in a helper like:
+Swap `vgg19` for `resnet50` with `configs/imagenet_resnet50_single.yaml`.
 
-```python
-model_a, model_b, vqvae, save_path = build_models_for(DATASET, num_classes)
+### Multi-model (differential) testing
+
+```bash
+python train_vqvae.py --config configs/mnist_vqvae.yaml
+python train_classifier.py --config configs/mnist_multi.yaml --target a
+python train_classifier.py --config configs/mnist_multi.yaml --target b
+python run_latte.py --config configs/mnist_multi.yaml
+python evaluate_results.py --config configs/mnist_multi.yaml \
+  --failures results/mnist_multi/failures_multi.pt
 ```
 
-Feel free to swap in your own backbones or adjust capacities (e.g., width multipliers in `Custom_Model_*`).
+Replace `mnist` with `fashionmnist` or `svhn` using the matching config. The model pairs are:
 
----
+| Dataset       | Model A     | Model B     |
+|---------------|-------------|-------------|
+| mnist         | LeNet-4     | LeNet-5     |
+| fashionmnist  | Custom-1.6B | Custom-3.3B |
+| svhn          | All-CNN-A   | All-CNN-B   |
+
+## Semantic drift (DINOv2)
+
+`evaluate_results.py` computes semantic drift via DINOv2 on a sample of failures. It downloads weights via `torch.hub`; no extra install is required beyond the default `pip install -e .`.

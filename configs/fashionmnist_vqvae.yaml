@@ -1,0 +1,12 @@
+seed: 123
+output_dir: results/fashionmnist_vqvae
+dataset:
+  name: fashionmnist
+  root: ./data
+  normalization: half
+vqvae:
+  batch_size: 128
+  lr: 0.001
+  epochs: 30
+  num_workers: 4
+  recon_weight: 2.0
